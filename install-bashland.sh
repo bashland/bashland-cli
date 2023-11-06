@@ -64,7 +64,7 @@ fish_config="${XDG_CONFIG_HOME:-~/.config}/fish/config.fish"
 
 # Optional parameter to specify a github branch
 # to pull from.
-github_branch=${1:-'0.0.10'}
+github_branch=${1:-'0.0.11'}
 
 install_bashland() {
     check_dependencies
