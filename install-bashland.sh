@@ -246,7 +246,7 @@ setup_bashland_files() {
 
     # Grab the code from master off github.
     echo "Pulling down bashland-client from ${github_branch} branch"
-    curl -sL https://github.com/bashland/bashland-cli/archive/refs/tags/${github_branch}.tar.gz -o client.tar.gz
+    curl -sL https://github.com/bashland/bashland-cli/archive/refs/tags/v${github_branch}.tar.gz -o client.tar.gz
     tar -xf client.tar.gz
     cd bashland-client*
 
