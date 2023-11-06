@@ -64,7 +64,7 @@ fish_config="${XDG_CONFIG_HOME:-~/.config}/fish/config.fish"
 
 # Optional parameter to specify a github branch
 # to pull from.
-github_branch=${1:-'2.4.1'}
+github_branch=${1:-'0.0.2'}
 
 install_bashland() {
     check_dependencies
@@ -246,7 +246,7 @@ setup_bashland_files() {
 
     # Grab the code from master off github.
     echo "Pulling down bashland-client from ${github_branch} branch"
-    curl -sL https://github.com/rcaloras/bashland-client/archive/${github_branch}.tar.gz -o client.tar.gz
+    curl -sL https://github.com/bashland/bashland-cli/archive/refs/tags/${github_branch}.tar.gz -o client.tar.gz
     tar -xf client.tar.gz
     cd bashland-client*
 
