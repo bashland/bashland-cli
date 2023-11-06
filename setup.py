@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import install_bashland
 from bashland.version import __version__ as version
 
-exec (open('bashhub/version.py').read())
+exec (open('bashland/version.py').read())
 
 setup(
     name='bashland',
