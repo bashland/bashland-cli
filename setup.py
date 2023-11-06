@@ -1,8 +1,10 @@
 from setuptools import setup, find_packages
+import install_bashland
+from bashland.version import __version__ as version
 
 setup(
     name='bashland',
-    version='0.0.4',
+    version=version,
     description='Bashland python client',
     author='bashland',
     author_email='bash.land@hotmail.com',
