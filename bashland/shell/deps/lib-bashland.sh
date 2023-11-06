@@ -4,7 +4,7 @@
 # shell functions between bash and zsh
 #
 
-__bh_path_add() {
+__bl_path_add() {
     if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
         PATH="${PATH:+"$PATH:"}$1"
     fi
@@ -24,7 +24,7 @@ contains_element() {
 }
 
 # Make sure our bin directory is on our path
-__bh_path_add "$HOME/.bashland/bin"
+__bl_path_add "$HOME/.bashland/bin"
 
 #
 # Function to be run by our preexec hook.
@@ -34,37 +34,37 @@ __bh_path_add "$HOME/.bashland/bin"
 # saved.
 #
 # GLOBALS:
-#   __BH_PWD The directory this command is being executed in
-#   __BH_SAVE_COMMAND The command that is being executed and to be saved.
+#   __BL_PWD The directory this command is being executed in
+#   __BL_SAVE_COMMAND The command that is being executed and to be saved.
 #
 # Arguments:
 #  $1 The command just entered, about to be executed.
 #
-__bh_preexec() {
-    __BH_PWD="$PWD"
-    __BH_SAVE_COMMAND="$1"
+__bl_preexec() {
+    __BL_PWD="$PWD"
+    __BL_SAVE_COMMAND="$1"
 }
 
-__bh_precmd() {
+__bl_precmd() {
 
     # Set this initially to properly catch the exit status.
-    __BH_EXIT_STATUS="$?"
+    __BL_EXIT_STATUS="$?"
 
     local bashland_dir
-    bashland_dir=${BH_HOME_DIRECTORY:=~/.bashland}
+    bashland_dir=${BL_HOME_DIRECTORY:=~/.bashland}
 
-    local command="$__BH_SAVE_COMMAND"
+    local command="$__BL_SAVE_COMMAND"
 
     # Check if we need to process a command. If so, unset it as it will be
     # processed and saved.
-    if [[ -n "$__BH_SAVE_COMMAND" ]]; then
-        unset __BH_SAVE_COMMAND
+    if [[ -n "$__BL_SAVE_COMMAND" ]]; then
+        unset __BL_SAVE_COMMAND
     else
         return 0
     fi
 
     if [[ -e "$bashland_dir" ]]; then
-        (__bh_process_command "$command"&) >> "$bashland_dir"/log.txt 2>&1
+        (__bl_process_command "$command"&) >> "$bashland_dir"/log.txt 2>&1
     fi;
 }
 
@@ -74,13 +74,13 @@ __bh_precmd() {
 #
 # @param A trimmed command from the command line
 #
-__bh_process_command() {
+__bl_process_command() {
 
-    local bh_command
-    bh_command=$(__bh_trim_whitespace "$1")
+    local bl_command
+    bl_command=$(__bl_trim_whitespace "$1")
 
     # Sanity empty check
-    if [[ -z "$bh_command" ]]; then
+    if [[ -z "$bl_command" ]]; then
         return 0;
     fi;
 
@@ -99,10 +99,10 @@ __bh_process_command() {
     process_start_stamp=$(LC_ALL=C ps -p $$ -o lstart=)
 
     local process_start=$(bashland util parsedate "$process_start_stamp")
-    local working_directory="$__BH_PWD"
-    local exit_status="$__BH_EXIT_STATUS"
+    local working_directory="$__BL_PWD"
+    local exit_status="$__BL_EXIT_STATUS"
 
-    (bashland save "$bh_command" "$working_directory" \
+    (bashland save "$bl_command" "$working_directory" \
     "$process_id" "$process_start" "$exit_status"&)
 }
 
@@ -110,29 +110,29 @@ __bh_process_command() {
 # It's added to our precmd functions. On its initial run
 # it removes itself from the precmd function array.
 # This means it runs exactly once.
-__bh_check_bashland_installation() {
+__bl_check_bashland_installation() {
     local ret
     ret=0
     if [[ -n "$BASH_VERSION" && -n "$__bp_enable_subshells" && "$(trap)" != *"__bp_preexec_invoke_exec"* ]]; then
         echo "bashland's preexec hook is being overriden and is not saving commands. Please resolve what may be holding the DEBUG trap."
         ret=1
-    elif [[ ! -f "$BH_HOME_DIRECTORY/config" ]]; then
+    elif [[ ! -f "$BL_HOME_DIRECTORY/config" ]]; then
         echo "Missing bashland config file. Please run 'bashland setup' to generate one."
         ret=2
-    elif ! grep -Fq "access_token" "$BH_HOME_DIRECTORY/config"; then
+    elif ! grep -Fq "access_token" "$BL_HOME_DIRECTORY/config"; then
         echo "Missing bashland access token. Please run 'bashland setup' to re-login."
         ret=3
-    elif ! grep -Fq "system_name" "$BH_HOME_DIRECTORY/config"; then
+    elif ! grep -Fq "system_name" "$BL_HOME_DIRECTORY/config"; then
         echo "Missing system name. Please run 'bashland setup' to re-login."
         ret=4
-    elif grep -Fq "save_commands = False" "$BH_HOME_DIRECTORY/config"; then
+    elif grep -Fq "save_commands = False" "$BL_HOME_DIRECTORY/config"; then
         echo "bashland is currently disabled. Run 'bashland on' to re-enable."
         ret=5
     fi;
 
     # Remove from precmd_functions so it only runs once when the session starts.
     local delete
-    delete=(__bh_check_bashland_installation)
+    delete=(__bl_check_bashland_installation)
     precmd_functions=( "${precmd_functions[@]/$delete}" )
 
     return $ret
@@ -140,20 +140,20 @@ __bh_check_bashland_installation() {
 
 # Allows bashland to manipulate session state by
 # manipulating variables when invoked by precmd.
-__bh_precmd_run_script() {
-    if [[ -e $BH_HOME_DIRECTORY/script.bh ]]; then
+__bl_precmd_run_script() {
+    if [[ -e $BL_HOME_DIRECTORY/script.bh ]]; then
         local command
-        command=$(head -n 1 "$BH_HOME_DIRECTORY/script.bh")
-        rm "$BH_HOME_DIRECTORY/script.bh"
+        command=$(head -n 1 "$BL_HOME_DIRECTORY/script.bh")
+        rm "$BL_HOME_DIRECTORY/script.bh"
         eval "$command"
      fi;
 }
 
 # Check our bashland installation when the session starts.
-precmd_functions+=(__bh_check_bashland_installation)
-precmd_functions+=(__bh_precmd_run_script)
+precmd_functions+=(__bl_check_bashland_installation)
+precmd_functions+=(__bl_precmd_run_script)
 
-__bh_trim_whitespace() {
+__bl_trim_whitespace() {
     local var=$@
     var="${var#"${var%%[![:space:]]*}"}"   # remove leading whitespace characters
     var="${var%"${var##*[![:space:]]}"}"   # remove trailing whitespace characters

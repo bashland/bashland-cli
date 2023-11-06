@@ -245,10 +245,10 @@ setup_bashland_files() {
     download_and_install_env
 
     # Grab the code from master off github.
-    echo "Pulling down bashland-client from ${github_branch} branch"
+    echo "Pulling down bashland-cli from ${github_branch} branch"
     curl -sL https://github.com/bashland/bashland-cli/archive/refs/tags/v${github_branch}.tar.gz -o client.tar.gz
     tar -xf client.tar.gz
-    cd bashland-client*
+    cd bashland-cli*
 
     # Copy over our dependencies.
     cp -r bashland/shell/deps ~/.bashland/
@@ -284,7 +284,7 @@ setup_bashland_files() {
     # Clean up what we downloaded
     cd ~/.bashland
     rm client.tar.gz
-    rm -r bashland-client*
+    rm -r bashland-cli*
 
     # Make sure our config is only readable to us.
     chmod 600 "$bashland_config"
