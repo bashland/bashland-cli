@@ -40,8 +40,8 @@ __bl_setup_bashland() {
 
 __bl_hook_bashland() {
 
-    # Bind ctrl + b to bh -i
-    bindkey -s '^b' "bh -i\n"
+    # Bind ctrl + b to bl -i
+    bindkey -s '^b' "bl -i\n"
 
     # Hook into preexec and precmd functions if they're not already
     # present there.
@@ -56,9 +56,9 @@ __bl_hook_bashland() {
 }
 
 __bl_zsh_precmd() {
-    if [[ -e $BL_HOME_DIRECTORY/response.bh ]]; then
-        local COMMAND="`head -n 1 $BL_HOME_DIRECTORY/response.bh`"
-        rm $BL_HOME_DIRECTORY/response.bh
+    if [[ -e $BL_HOME_DIRECTORY/response.bl ]]; then
+        local COMMAND="`head -n 1 $BL_HOME_DIRECTORY/response.bl`"
+        rm $BL_HOME_DIRECTORY/response.bl
         print -z $COMMAND
     fi;
 }

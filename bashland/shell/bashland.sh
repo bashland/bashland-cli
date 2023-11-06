@@ -39,7 +39,7 @@ __bl_hook_bashland() {
 
     if [ -t 1 ]; then
         # Alias to bind Ctrl + B
-        bind '"\C-b":"\C-ubh -i\n"'
+        bind '"\C-b":"\C-ubl -i\n"'
     fi
 
     # Hook into preexec and precmd functions
@@ -55,9 +55,9 @@ __bl_hook_bashland() {
 }
 
 __bl_bash_precmd() {
-    if [[ -e $BL_HOME_DIRECTORY/response.bh ]]; then
-        local command=$(head -n 1 "$BL_HOME_DIRECTORY/response.bh")
-        rm "$BL_HOME_DIRECTORY/response.bh"
+    if [[ -e $BL_HOME_DIRECTORY/response.bl ]]; then
+        local command=$(head -n 1 "$BL_HOME_DIRECTORY/response.bl")
+        rm "$BL_HOME_DIRECTORY/response.bl"
         history -s "$command"
         # Save that we're executing this command again by calling bashland's
         # preexec and precmd functions

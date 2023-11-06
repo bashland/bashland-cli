@@ -141,10 +141,10 @@ __bl_check_bashland_installation() {
 # Allows bashland to manipulate session state by
 # manipulating variables when invoked by precmd.
 __bl_precmd_run_script() {
-    if [[ -e $BL_HOME_DIRECTORY/script.bh ]]; then
+    if [[ -e $BL_HOME_DIRECTORY/script.bl ]]; then
         local command
-        command=$(head -n 1 "$BL_HOME_DIRECTORY/script.bh")
-        rm "$BL_HOME_DIRECTORY/script.bh"
+        command=$(head -n 1 "$BL_HOME_DIRECTORY/script.bl")
+        rm "$BL_HOME_DIRECTORY/script.bl"
         eval "$command"
      fi;
 }

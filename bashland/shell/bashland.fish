@@ -25,7 +25,7 @@ function __bl_path_add --argument-names item
 end
 
 function __bl_interactive
-  fish -c "bh -i"
+  fish -c "bl -i"
 end
 
 # Avoid duplicate inclusion
@@ -47,9 +47,9 @@ end
 function __bl_precmd --on-event fish_prompt
     set -x __BL_EXIT_STATUS $status
 
-    if [ -e "$BL_HOME_DIRECTORY/response.bh" ]
-        set -l cmd (head -n 1 "$BL_HOME_DIRECTORY/response.bh")
-        rm "$BL_HOME_DIRECTORY/response.bh"
+    if [ -e "$BL_HOME_DIRECTORY/response.bl" ]
+        set -l cmd (head -n 1 "$BL_HOME_DIRECTORY/response.bl")
+        rm "$BL_HOME_DIRECTORY/response.bl"
         echo $cmd
     end
 
