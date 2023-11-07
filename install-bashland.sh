@@ -64,7 +64,7 @@ fish_config="${XDG_CONFIG_HOME:-~/.config}/fish/config.fish"
 
 # Optional parameter to specify a github branch
 # to pull from.
-github_branch=${1:-'0.0.12'}
+github_branch=${1:-'0.0.13'}
 
 install_bashland() {
     check_dependencies
@@ -113,8 +113,8 @@ check_dependencies() {
         die "\n Sorry can't seem to find a version of python 3.6-3.11 or 2.7.9+ installed" 1
     fi
 
-    if [ -z "$(detect_shell_type)" ]; then
-        die "\n Sorry, couldn't detect your shell type. Bashland only supports bash or zsh. Your defualt shell is $SHELL." 1
+    if [ ! -e $bashprofile ]; then
+        die "\n Sorry, Bashland only supports bash or zsh. Your defualt shell is $SHELL." 1
     fi;
 }
 
@@ -206,35 +206,16 @@ install_hooks_for_bash() {
 
 }
 
-detect_shell_type() {
-    if [ -n "$ZSH_VERSION" ]; then
-        echo 'zsh'
-    elif [ -n "$FISH_VERSION" ]; then
-        echo 'fish'
-    elif [ -n "$BASH_VERSION" ]; then
-        echo 'bash'
-    else
-        :
-    fi
-}
-
 install_hooks_for_shell() {
-    local shell_type
-    shell_type=$(detect_shell_type)
-
-    case $shell_type in
-        "zsh")
-            install_hooks_for_zsh
-            ;;
-        "fish")
-            install_hooks_for_fish
-            ;;
-        "bash")
-            install_hooks_for_bash
-            ;;
-        *)
+    if [ -n "$ZSH_VERSION" ] || [ -f ~/.zshrc ]; then
+        install_hooks_for_zsh
+    elif [ -n $fish_config ]; then
+        install_hooks_for_fish
+    elif [ -n $bashprofile ]; then
+        install_hooks_for_bash
+    else
         die "\n Bashland only supports bash, fish, or zsh. Your default shell is $SHELL." 1
-    esac
+    fi
 }
 
 
@@ -327,7 +308,10 @@ find_users_bash_file() {
     fi
 }
 
-die () { echo -e $1; exit $2; }
+die() {
+    echo "$1" >&2
+    exit "${2:-1}"  # Exit with the provided status or default to 1
+}
 
 # Run our install so long as we're not in test.
 if [[ -z "$bashland_install_test" ]]; then
