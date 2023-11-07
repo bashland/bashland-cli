@@ -64,7 +64,7 @@ fish_config="${XDG_CONFIG_HOME:-~/.config}/fish/config.fish"
 
 # Optional parameter to specify a github branch
 # to pull from.
-github_branch=${1:-'0.0.13'}
+github_branch=${1:-'0.0.14'}
 
 install_bashland() {
     check_dependencies
@@ -272,7 +272,7 @@ setup_bashland_files() {
     chmod 700 ~/.bashland
 
     if [ -e "$bashland_config" ]; then
-        echo "Should be good to go! Please close and restart your terminal session."
+        echo "Good to go! Run 'bl' to get your history from everywhere."
     else
         echo "Please run 'bashland setup' after restarting your terminal session."
     fi
