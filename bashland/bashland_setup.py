@@ -155,8 +155,7 @@ def handle_system_information(username, password, attempts=0):
     # If this system is already registered
     if system is not None:
         system_name = system.name
-        print("Welcome back! Looks like this box is already registered as " +
-              system.name + ".")
+        print("Logged in on device [" + system.name + "].")
 
     return (access_token, system_name)
 
