@@ -64,7 +64,7 @@ fish_config="${XDG_CONFIG_HOME:-~/.config}/fish/config.fish"
 
 # Optional parameter to specify a github branch
 # to pull from.
-github_branch=${1:-'0.0.15'}
+github_branch=${1:-'0.0.16'}
 
 install_bashland() {
     check_dependencies
@@ -209,7 +209,7 @@ install_hooks_for_bash() {
 install_hooks_for_shell() {
     if [ -n "$ZSH_VERSION" ] || [ -f ~/.zshrc ]; then
         install_hooks_for_zsh
-    elif [ -n $fish_config ]; then
+    elif [ -n $fish_config ] && [ -e $fish_config ]; then
         install_hooks_for_fish
     elif [ -n $bashprofile ]; then
         install_hooks_for_bash
